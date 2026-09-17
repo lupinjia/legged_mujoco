@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<mujoco model="agilepf">
+  <compiler angle="radian" meshdir="./meshes/"/>
+
+  <default>
+    <!-- visual -->
+    <!-- contype="0" 和 conaffinity="0" 表示该几何体不会与任何物体碰撞（包括地面） -->
+    <default class="visual">
+      <geom contype="0" conaffinity="0" group="1" type="mesh" density="0"/>
+    </default>
+
+    <!-- collision -->
+    <!-- default geom for collision geometries -->
+    <default class="collision">
+      <geom contype="1" conaffinity="1" condim="3" friction="0.6 0.005 0.0001" margin="0.001" group="3" />
+    </default>
+
+    <!-- joint -->
+    <default class="EC-A8112-P1-18_joint">
+      <!-- armature value here is the provided rotor inertia(kg*m^2) multiplied by the square of the gear ratio -->
+      <!-- rotor inertia and gear ratio can be checked in https://www.encos.cn -->
+      <joint armature="0.04752756" type="hinge" actuatorfrcrange="-90 90"/>
+    </default>
+
+    <!-- motor -->
+    <default class="EC-A8112-P1-18_motor">
+      <motor ctrllimited="true" ctrlrange="-90 90"/>
+    </default>
+
+  </default>
+
+  <asset>
+    <mesh name="base" file="base.STL"/>
+    <mesh name="left_hip" file="left_hip.STL"/>
+    <mesh name="left_thigh" file="left_thigh.STL"/>
+    <mesh name="left_calf" file="left_calf.STL"/>
+    <mesh name="left_foot" file="left_foot.STL"/>
+    <mesh name="right_hip" file="right_hip.STL"/>
+    <mesh name="right_thigh" file="right_thigh.STL"/>
+    <mesh name="right_calf" file="right_calf.STL"/>
+    <mesh name="right_foot" file="right_foot.STL"/>
+  </asset>
+  <worldbody>
+    <!-- set initial pos and euler of base link -->
+    <body name="base" pos="0 0 0.41" euler="0 0.1 0">
+      <!-- Add freejoint will add additional 7 dofs -->
+      <freejoint name="base_free_joint"/>
+      <!-- add imu site for sensor measurement -->
+      <site name="imu" pos="0 0 0"/>
+
+      <inertial pos="-0.0178297 -0.00108765 0.0273782" quat="0.969694 -0.0268392 -0.242183 -0.0178857" mass="6.90136" diaginertia="0.0880321 0.0785021 0.0542606"/>
+      <geom class="visual" rgba="0.75294 0.75294 0.75294 1" mesh="base"/>
+      <geom class="collision" size="0.115 0.131 0.0345" pos="0 0 0.0345" type="box" rgba="0.75294 0.75294 0.75294 1"/>
+
+      <camera name="depth_camera" pos="0.11154 -0.00072 0.10151" euler="0 -1.27 -1.57" mode="fixed"
+              fovy="62"/> <!-- fovy the same as D435i for 4:3 aspect ratio -->
+
+      <body name="battery_box" pos="0 0 0.1495">
+        <inertial pos="0 0 0" mass="0.001" diaginertia="1e-10 1e-10 1e-10"/>
+        <geom class="collision" size="0.0745 0.1 0.0415" pos="0 0 -0.0415" type="box"/>
+      </body>
+      <body name="back_shield" pos="-0.10423 -0.00072 -0.06106">
+        <inertial pos="0 0 0" mass="0.001" diaginertia="1e-10 1e-10 1e-10"/>
+        <geom class="collision" size="0.002 0.131 0.03" pos="0.002 0 0.025" type="box"/>
+        <geom class="collision" size="0.002 0.065 0.068" pos="0.002 0 -0.00944" type="box"/>
+      </body>
+      <body name="fore_shield" pos="0.10377 -0.00072 -0.05696">
+        <inertial pos="0 0 0" mass="0.001" diaginertia="1e-10 1e-10 1e-10"/>
+        <geom class="collision" size="0.002 0.131 0.068" pos="-0.002 0 -0.01354" type="box"/>
+      </body>
+      <body name="left_rounded_corner" pos="-0.10223 0.07572 -0.0825">
+        <inertial pos="0 0 0" mass="0.001" diaginertia="1e-10 1e-10 1e-10"/>
+        <geom class="collision" size="0.056 0.002" pos="-0.002 0 0" quat="0.707388 0 0.706825 0" type="cylinder"/>
+      </body>
+      <body name="right_rounded_corner" pos="-0.10223 -0.07572 -0.0825">
+        <inertial pos="0 0 0" mass="0.001" diaginertia="1e-10 1e-10 1e-10"/>
+        <geom class="collision" size="0.056 0.002" pos="-0.002 0 0" quat="0.707388 0 0.706825 0" type="cylinder"/>
+      </body>
+      <body name="left_hip_motor" pos="-0.08738 0.07572 -0.0825">
+        <inertial pos="0 0 0" mass="0.001" diaginertia="1e-10 1e-10 1e-10"/>
+        <geom class="collision" size="0.0525 0.0265" pos="0.01165 0 0" quat="0.707388 0 0.706825 0" type="cylinder"/>
+      </body>
+      <body name="right_hip_motor" pos="-0.08738 -0.07572 -0.0825">
+        <inertial pos="0 0 0" mass="0.001" diaginertia="1e-10 1e-10 1e-10"/>
+        <geom class="collision" size="0.0525 0.0265" pos="0.01165 0 0" quat="0.707388 0 0.706825 0" type="cylinder"/>
+      </body>
+
+      <body name="left_hip" pos="-0.050885 0.075723 -0.0825">
+        <inertial pos="0.0801801 -0.0230168 -0.0001447" quat="0.412935 0.412965 0.576746 0.571235" mass="0.963301" diaginertia="0.00115291 0.000949573 0.000528046"/>
+        <joint name="left_hip_joint" pos="0 0 0" axis="1 0 0" range="-0.48 0.48" class="EC-A8112-P1-18_joint"/>
+        <geom class="visual" rgba="0.3098 0.3098 0.3098 1" mesh="left_hip"/>
+        <geom class="collision" size="0.0525 0.0265" pos="0.08826 -0.0255 0" quat="0.707388 0.706825 0 0" type="cylinder" rgba="0.3098 0.3098 0.3098 1"/>
+        
+        <body name="left_thigh" pos="0.088264 0.068 0">
+          <inertial pos="-0.00253991 -0.00142269 -0.0199369" quat="0.954786 -0.120597 -0.059504 -0.26514" mass="1.4731" diaginertia="0.00613714 0.00569365 0.00168771"/>
+          <joint name="left_thigh_joint" pos="0 0 0" axis="0 1 0" range="-1.23 2.73" class="EC-A8112-P1-18_joint"/>
+          <geom class="visual" rgba="0.87451 0.68627 1 1" mesh="left_thigh"/>
+          <geom class="collision" size="0.0525 0.04516" pos="0 0.00316 0" quat="0.707388 0.706825 0 0" type="cylinder" rgba="0.87451 0.68627 1 1"/>
+          <geom class="collision" size="0.02 0.019905 0.129745" pos="-0.02 0.034 -0.08" quat="0.99875 0 -0.0499792 0" type="box" rgba="0.87451 0.68627 1 1"/>
+
+          <body name="left_calf" pos="0 0.034 -0.2">
+            <inertial pos="0.071716 -3.691e-08 -0.064562" quat="0.656508 -0.262672 -0.262672 0.656508" mass="0.16311" diaginertia="0.00098076 0.000961826 2.89736e-05"/>
+            <joint name="left_calf_joint" pos="0 0 0" axis="0 1 0" range="-1.98 0" class="EC-A8112-P1-18_joint"/>
+            <geom class="visual" rgba="0.3098 0.3098 0.3098 1" mesh="left_calf"/>
+            <geom class="collision" size="0.015 0.011 0.1" pos="0.07 0 -0.06" quat="0.930508 0 -0.366273 0" type="box" rgba="0.3098 0.3098 0.3098 1"/>
+            
+            <body name="left_foot" pos="0.13331 0 -0.14318">
+              <inertial pos="0.00024867 3.9287e-09 -0.011848" quat="-1.66494e-05 0.699648 1.70025e-05 0.714487" mass="0.026651" diaginertia="5.72922e-06 4.4015e-06 3.62888e-06"/>
+              <geom class="visual" rgba="0.79608 0.82353 0.93725 1" mesh="left_foot"/>
+              <geom class="collision" size="0.022" pos="0 0 -0.005" rgba="0.79608 0.82353 0.93725 1"/>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="right_hip" pos="-0.050885 -0.074277 -0.0825">
+        <inertial pos="0.0801754 0.0230111 4.672e-05" quat="0.567983 0.580028 0.409732 0.416032" mass="0.963523" diaginertia="0.00115347 0.000949831 0.000528374"/>
+        <joint name="right_hip_joint" pos="0 0 0" axis="1 0 0" range="-0.48 0.48" class="EC-A8112-P1-18_joint"/>
+        <geom class="visual" rgba="0.3098 0.3098 0.3098 1" mesh="right_hip"/>
+        <geom class="collision" size="0.0525 0.0265" pos="0.08826 0.0255 0" quat="0.707388 0.706825 0 0" type="cylinder" rgba="0.3098 0.3098 0.3098 1"/>
+        
+        <body name="right_thigh" pos="0.088264 -0.068 0">
+          <inertial pos="-0.00235188 0.00133928 -0.0195019" quat="0.962516 0.120213 -0.0562232 0.236537" mass="1.4784" diaginertia="0.00616074 0.00573419 0.0016712"/>
+          <joint name="right_thigh_joint" pos="0 0 0" axis="0 1 0" range="-1.23 2.73" class="EC-A8112-P1-18_joint"/>
+          <geom class="visual" rgba="0.37255 1 0.81176 1" mesh="right_thigh"/>
+          <geom class="collision" size="0.0525 0.04516" pos="0 -0.00316 0" quat="0.707388 0.706825 0 0" type="cylinder" rgba="0.37255 1 0.81176 1"/>
+          <geom class="collision" size="0.02 0.019905 0.129745" pos="-0.02 -0.034 -0.08" quat="0.99875 0 -0.0499792 0" type="box" rgba="0.37255 1 0.81176 1"/>
+          
+          <body name="right_calf" pos="0 -0.034 -0.2">
+            <inertial pos="0.071716 -3.6905e-08 -0.064562" quat="0.656508 -0.262672 -0.262672 0.656508" mass="0.16311" diaginertia="0.00098076 0.000961826 2.89736e-05"/>
+            <joint name="right_calf_joint" pos="0 0 0" axis="0 1 0" range="-1.98 0" class="EC-A8112-P1-18_joint"/>
+            <geom class="visual" rgba="0.3098 0.3098 0.3098 1" mesh="right_calf"/>
+            <geom class="collision" size="0.015 0.011 0.1" pos="0.07 0 -0.06" quat="0.930508 0 -0.366273 0" type="box" rgba="0.3098 0.3098 0.3098 1"/>
+            
+            <body name="right_foot" pos="0.13331 0 -0.14318">
+              <inertial pos="0.00024867 3.8242e-09 -0.011848" quat="-1.66636e-05 0.699648 1.70171e-05 0.714487" mass="0.026651" diaginertia="5.72922e-06 4.4015e-06 3.62888e-06"/>
+              <geom class="visual" rgba="0.79608 0.82353 0.93725 1" mesh="right_foot"/>
+              <geom class="collision" size="0.022" pos="0 0 -0.005" rgba="0.79608 0.82353 0.93725 1"/>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor class="EC-A8112-P1-18_motor" name="left_hip" joint="left_hip_joint" />
+    <motor class="EC-A8112-P1-18_motor" name="left_thigh" joint="left_thigh_joint" />
+    <motor class="EC-A8112-P1-18_motor" name="left_calf" joint="left_calf_joint" />
+    <motor class="EC-A8112-P1-18_motor" name="right_hip" joint="right_hip_joint" />
+    <motor class="EC-A8112-P1-18_motor" name="right_thigh" joint="right_thigh_joint" />
+    <motor class="EC-A8112-P1-18_motor" name="right_calf" joint="right_calf_joint" />
+  </actuator>
+
+  <!-- imu, joint pos and joint vel sensor-->
+  <sensor>
+
+    <jointpos name="left_hip_pos" joint="left_hip_joint" />
+    <jointpos name="left_thigh_pos" joint="left_thigh_joint" />
+    <jointpos name="left_calf_pos" joint="left_calf_joint" />
+    <jointpos name="right_hip_pos" joint="right_hip_joint" />
+    <jointpos name="right_thigh_pos" joint="right_thigh_joint" />
+    <jointpos name="right_calf_pos" joint="right_calf_joint" />
+
+    <jointvel name="left_hip_vel" joint="left_hip_joint" />
+    <jointvel name="left_thigh_vel" joint="left_thigh_joint" />
+    <jointvel name="left_calf_vel" joint="left_calf_joint" />
+    <jointvel name="right_hip_vel" joint="right_hip_joint" />
+    <jointvel name="right_thigh_vel" joint="right_thigh_joint" />
+    <jointvel name="right_calf_vel" joint="right_calf_joint" />
+
+    <framequat objtype="site" objname="imu" name="imu_quat"/>
+    <gyro site="imu" name="imu_gyro"/>
+    <accelerometer site="imu" name="imu_accel"/>
+  </sensor>
+
+  <keyframe>
+        <key name="home"
+             qpos="0 0 0.4 1 0 0 0
+                   0.332 1.22 -1.98 -0.316 1.22 -1.98"
+            ctrl="0.332 1.22 -1.98 -0.316 1.22 -1.98"
+        />
+    </keyframe>
+</mujoco>
