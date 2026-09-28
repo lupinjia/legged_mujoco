@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "urdf2mjcf"
+version = "1.0.0"
+description = "Convert URDF models to MuJoCo MJCF"
+requires-python = ">=3.8"
+dependencies = ["mujoco>=3", "defusedxml>=0.7"]
+
+[project.optional-dependencies]
+format = ["lxml"]
+
+[project.scripts]
+urdf2mjcf = "urdf2mjcf.command:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+license-files = ["LICENSE"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -23,6 +23,14 @@ The architecture is the same as [unitree_mujoco](https://github.com/unitreerobot
 
 - Press `Enter` to track base_link of the robot, press `Esc` to use free camera (only in C++)
 
+## URDF to MuJoCo
+
+The `urdf2mjcf` helper converts a URDF robot description to MuJoCo MJCF. See
+[`urdf2mjcf/README.md`](urdf2mjcf/README.md) for installation, command-line options,
+and an example. The converter can create a robot directory under `robots/<name>/`;
+review and refine the generated MJCF manually where needed. Mesh files are resolved
+from the URDF's mesh paths, and this repository does not include N1 robot assets.
+
 ## Demo
 
 ![](https://github.com/lupinjia/demo_imgs/blob/master/unitree_mujoco_demo.gif)
