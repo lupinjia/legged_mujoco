@@ -15,9 +15,11 @@ from mujoco import MjModel, mj_saveLastXML
 
 
 def resolve_uris(urdf: Element, base_path: Optional[Union[str, Path]] = None) -> None:
-    """Resolve collision mesh URIs relative to the source URDF directory."""
+    """Resolve visual and collision mesh URIs relative to the source URDF directory."""
     base = Path(base_path).expanduser().resolve() if base_path is not None else None
-    for mesh_node in urdf.findall(".//collision/*/mesh[@filename]"):
+    for mesh_node in urdf.findall(".//visual/*/mesh[@filename]") + urdf.findall(
+        ".//collision/*/mesh[@filename]"
+    ):
         uri = mesh_node.get("filename")
         if uri is None:
             raise ValueError(f"Mesh node without filename: '{mesh_node.tag}' : {mesh_node.attrib}")
@@ -67,7 +69,7 @@ def add_mujoco_node(urdf: Element, mujoco_node: Optional[Element] = None) -> Non
         urdf.remove(existing)
 
     attributes: Dict[str, Dict[str, str]] = {
-        "./compiler": {"strippath": "false", "fusestatic": "false", "discardvisual": "true"},
+        "./compiler": {"strippath": "false", "fusestatic": "false", "discardvisual": "false"},
         "./compiler/lengthrange": {},
         "./option": {},
         "./option/flag": {},
