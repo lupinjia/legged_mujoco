@@ -11,7 +11,6 @@ endif()
 
 list(APPEND CMAKE_PREFIX_PATH "/opt/legged_sdk/lib/cmake")
 find_package(mujoco REQUIRED)
-find_package(OpenCV REQUIRED)
 find_package(legged_sdk REQUIRED)
 find_package(Boost REQUIRED COMPONENTS program_options)
 
@@ -39,8 +38,7 @@ add_executable(legged_mujoco
   ${SIM_SRC} 
   src/main.cc)
 target_link_libraries(legged_mujoco 
-  ${SIM_DEPENDENCIES} 
-  ${OpenCV_LIBS} )
+  ${SIM_DEPENDENCIES} )
 
 add_executable(test test/test_legged_sdk.cpp)
 target_link_libraries(test legged_sdk)

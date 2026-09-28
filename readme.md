@@ -4,7 +4,6 @@ The architecture is the same as [unitree_mujoco](https://github.com/unitreerobot
 
 ## Additional Dependencies
 
-- [opencv 4.12.0](https://github.com/opencv/opencv/tree/4.12.0)
 - [mujoco 3.2.7](https://github.com/google-deepmind/mujoco/tree/3.2.7)
 
 ## Features
@@ -14,12 +13,6 @@ The architecture is the same as [unitree_mujoco](https://github.com/unitreerobot
   Added joystick mapping code (simulate/src/physics_joystick.h) according to the proxy of [Yahboom USB Wireless Joystick](https://yahboom.com/study_module/PS2) and betop USB joystick
 
   Change the `joystick_type` in `simulate/config.yaml` to other values if you want to use joystick of other types
-
-- Add support for depth image accessing through both Python and C++ API
-
-  Through calling mujoco API and adding camera element in `go2.xml` we can obtain the depth image from mujoco.
-
-  The processed depth image is published to a dds topic named "rt/depthimage" using cyclonedds.
 
 - Press `Enter` to track base_link of the robot, press `Esc` to use free camera (only in C++)
 

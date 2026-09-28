@@ -1,5 +1,6 @@
 # Project notes
 
+- The C++ simulator's ordinary viewer cameras/RGB screenshots and low-level `legged_sdk` DDS bridge are independent of the removed depth-image pipeline; do not reintroduce OpenCV or depth-image config just to build them. C++ configure requires a MuJoCo CMake package and `legged_sdk` in `/opt/legged_sdk`.
 - The Python URDF-to-MJCF converter is a separate package in `urdf2mjcf/`; install with `python -m pip install -e ./urdf2mjcf` (add `[format]` for optional `--format` support).
 - Run converter checks with `python -m unittest discover -s tests -p 'test_urdf2mjcf.py'`. The tests require the converter's MuJoCo and defusedxml dependencies; without them, the integration cases skip.
 - Convert with `urdf2mjcf input.urdf --output robots/<name>/<name>.xml`. Optional `--sensor_config` and `--mujoco_node` both take XML file paths. Mesh assets must remain accessible; review generated MJCF before using it in a simulation.

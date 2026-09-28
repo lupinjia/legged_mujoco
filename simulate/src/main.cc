@@ -31,7 +31,6 @@
 #include "mujoco/array_safety.h"
 #include "legged_sdk_bridge.h"
 #include "param.h"
-#include "utils/depth_display.hpp"
 
 #define MUJOCO_PLUGIN_DIR "mujoco_plugin"
 
@@ -591,30 +590,10 @@ int main(int argc, char **argv)
   // simulate object encapsulates the UI
   auto sim = std::make_unique<mj::Simulate>(
     std::make_unique<mj::GlfwAdapter>(),
-    &cam, &opt, &pert, /* is_passive = */ false,
-    param::config.depth_width,
-    param::config.depth_height,
-    param::config.crop_left,
-    param::config.enable_depth,
-    param::config.near_clip,
-    param::config.far_clip);
+    &cam, &opt, &pert, /* is_passive = */ false);
 
   // publish and subscribe to low-level msg (motor, imu, etc) of unitree_sdk2
   std::thread legged_sdk_thread(LeggedSDKBridgeThread, nullptr);
-
-  // Create depth display thread (using OpenCV to display)
-  if(param::config.enable_depth == 1)
-  {
-    // use pointer to avoid object destruction when the if scope ends
-    DepthDisplay* depth_display = new DepthDisplay(
-      sim.get(),
-      param::config.depth_width,
-      param::config.depth_height,
-      param::config.crop_left,
-      param::config.depth_dt,
-      param::config.domain_id,
-      param::config.interface);
-  }
 
   // start physics thread
   std::thread physicsthreadhandle(&PhysicsThread, sim.get(), param::config.robot_scene.c_str());

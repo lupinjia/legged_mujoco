@@ -23,32 +23,6 @@ inline struct SimulationConfig
 
     int print_scene_information;
 
-    // depth config
-    int depth_width;
-    int depth_height;
-    int crop_left;
-    float far_clip;
-    float near_clip;
-    float depth_dt;
-    int enable_depth;
-    int visualize_opencv;
-    // depth noise config
-    int add_depth_stereo_noise;
-    float far_noise;
-    float near_noise;
-    float stereo_full_block_artifacts_prob;
-    std::array<float, 2> stereo_full_block_height_mean_std;
-    std::array<float, 2> stereo_full_block_width_mean_std;
-    std::vector<float> stereo_full_block_values;
-    float stereo_half_block_spark_prob;
-    float stereo_half_block_value;
-    int add_sky_artifacts;
-    float sky_artifacts_prob;
-    float sky_artifacts_far_distance;
-    std::vector<float> sky_artifacts_values;
-    std::array<float, 2> sky_artifacts_height_mean_std;
-    std::array<float, 2> sky_artifacts_width_mean_std;
-
     void load_from_yaml(const std::string &filename)
     {
         auto cfg = YAML::LoadFile(filename);
@@ -63,30 +37,6 @@ inline struct SimulationConfig
             joystick_device = cfg["joystick_device"].as<std::string>();
             joystick_bits = cfg["joystick_bits"].as<int>();
             print_scene_information = cfg["print_scene_information"].as<int>();
-            depth_width = cfg["depth_width"].as<int>();
-            depth_height = cfg["depth_height"].as<int>();
-            crop_left = cfg["crop_left"].as<int>();
-            far_clip = cfg["far_clip"].as<float>();
-            near_clip = cfg["near_clip"].as<float>();
-            depth_dt = cfg["depth_dt"].as<float>();
-            enable_depth = cfg["enable_depth"].as<int>();
-            visualize_opencv = cfg["visualize_opencv"].as<int>();
-            // depth noise
-            add_depth_stereo_noise = cfg["add_depth_stereo_noise"].as<int>();
-            far_noise = cfg["far_noise"].as<float>();
-            near_noise = cfg["near_noise"].as<float>();
-            stereo_full_block_artifacts_prob = cfg["stereo_full_block_artifacts_prob"].as<float>();
-            stereo_full_block_height_mean_std = cfg["stereo_full_block_height_mean_std"].as<std::array<float, 2>>();
-            stereo_full_block_width_mean_std = cfg["stereo_full_block_width_mean_std"].as<std::array<float, 2>>();
-            stereo_full_block_values = cfg["stereo_full_block_values"].as<std::vector<float>>();
-            stereo_half_block_spark_prob = cfg["stereo_half_block_spark_prob"].as<float>();
-            stereo_half_block_value = cfg["stereo_half_block_value"].as<float>();
-            add_sky_artifacts = cfg["add_sky_artifacts"].as<int>();
-            sky_artifacts_prob = cfg["sky_artifacts_prob"].as<float>();
-            sky_artifacts_far_distance = cfg["sky_artifacts_far_distance"].as<float>();
-            sky_artifacts_values = cfg["sky_artifacts_values"].as<std::vector<float>>();
-            sky_artifacts_height_mean_std = cfg["sky_artifacts_height_mean_std"].as<std::array<float, 2>>();
-            sky_artifacts_width_mean_std = cfg["sky_artifacts_width_mean_std"].as<std::array<float, 2>>();
         }
         catch(const std::exception& e)
         {
