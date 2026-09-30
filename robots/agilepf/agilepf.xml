@@ -32,7 +32,7 @@
   </asset>
 
   <worldbody>
-    <body name="base">
+    <body name="base" pos="0 0 0.41">
       <freejoint name="base_free_joint" />
       <site name="imu" />
       <inertial pos="-0.014432 -0.0030579 0.046047" quat="0.494468 0.505436 -0.494582 0.505395" mass="8.9799" diaginertia="0.043479 0.0301404 0.0229206" />
