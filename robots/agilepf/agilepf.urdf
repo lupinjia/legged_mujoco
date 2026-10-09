@@ -455,7 +455,7 @@
     <child
       link="right_thigh" />
     <axis
-      xyz="0 -1 0" />
+      xyz="0 1 0" />
     <limit
       lower="-1.23"
       upper="2.73"
