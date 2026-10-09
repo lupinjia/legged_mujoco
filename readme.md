@@ -12,7 +12,7 @@ The architecture is the same as [unitree_mujoco](https://github.com/unitreerobot
   # checkout out to the specified version
   git checkout  3.13.0
   mkdir build && cd build
-  cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_C_COMPILER=/usr/bin/gcc-13 -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 # specify gcc-13 if multiple versions of gcc are installed
   make -j$(nproc)
   sudo make install
   ```

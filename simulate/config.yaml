@@ -5,7 +5,7 @@ domain_id: 1    # Domain id
 interface: "lo" # Interface 
 
 use_joystick: 1 # Simulate Unitree WirelessController using a gamepad
-joystick_type: "keyboard" # "xbox", "switch", "yahboom", "betop", or "keyboard" (see src/keyboard_joystick.h)
+joystick_type: "betop" # "xbox", "switch", "yahboom", "betop", or "keyboard" (see src/keyboard_joystick.h)
 joystick_device: "/dev/input/js0" # Device path (unused by "keyboard")
 joystick_bits: 16 # Some game controllers may only have 8-bit accuracy
 
