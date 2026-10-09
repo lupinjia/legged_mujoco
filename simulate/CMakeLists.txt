@@ -21,12 +21,11 @@ include_directories(
 
 file(GLOB SIM_SRC
     src/joystick/joystick.cc
-    src/mujoco/*.cc
 )
 
 set(SIM_DEPENDENCIES
     pthread
-    mujoco::mujoco
+    mujoco::libmujoco_simulate
     glfw
     yaml-cpp
     legged_sdk

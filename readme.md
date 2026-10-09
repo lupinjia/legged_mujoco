@@ -2,9 +2,40 @@
 
 The architecture is the same as [unitree_mujoco](https://github.com/unitreerobotics/unitree_mujoco). 
 
-## Additional Dependencies
+## Dependencies
 
-- [mujoco 3.2.7](https://github.com/google-deepmind/mujoco/tree/3.2.7)
+- Ubuntu 24.04
+- mujoco 3.13.0
+
+  ```bash
+  git clone https://github.com/google-deepmind/mujoco.git && cd mujoco
+  # checkout out to the specified version
+  git checkout  3.13.0
+  mkdir build && cd build
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
+  make -j$(nproc)
+  sudo make install
+  ```
+
+## Installation
+
+- Clone this repository to your local machine
+
+  ```bash
+  git clone https://github.com/lupinjia/legged_mujoco.git
+  ```
+
+- Compile the code
+
+  ```bash
+  # If you have activated a conda environment, deactivate it first to avoid compilation errors
+  conda deactivate
+
+  cd legged_mujoco/simulate
+  mkdir build && cd build
+  cmake ..
+  make
+  ```
 
 ## Features
 

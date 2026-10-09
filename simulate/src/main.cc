@@ -26,9 +26,9 @@
 #include <filesystem>
 
 #include <mujoco/mujoco.h>
-#include "mujoco/glfw_adapter.h"
-#include "mujoco/simulate.h"
-#include "mujoco/array_safety.h"
+#include "glfw_adapter.h"
+#include "simulate.h"
+#include "array_safety.h"
 #include "legged_sdk_bridge.h"
 #include "param.h"
 
