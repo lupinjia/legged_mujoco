@@ -15,6 +15,7 @@
 
 #include "param.h"
 #include "physics_joystick.h"
+#include "keyboard_joystick.h"
 
 using namespace legged::dds;
 
@@ -23,7 +24,7 @@ using namespace legged::dds;
 class LeggedSDKBridgeBase
 {
 public:
-    LeggedSDKBridgeBase(mjModel *model, mjData *data)
+    LeggedSDKBridgeBase(mjModel *model, mjData *data, const KeyboardGlfwAdapter *keyboard = nullptr)
     : mj_model_(model), mj_data_(data)
     {
         _check_sensor();
@@ -39,6 +40,8 @@ public:
                 joystick  = std::make_shared<YahboomJoystick>(param::config.joystick_device, param::config.joystick_bits);
             } else if(param::config.joystick_type == "betop") {
                 joystick  = std::make_shared<BeTopJoystick>(param::config.joystick_device, param::config.joystick_bits);
+            } else if(param::config.joystick_type == "keyboard") {
+                joystick  = std::make_shared<KeyboardJoystick>(keyboard);
             } else {
                 std::cerr << "Unsupported joystick type: " << param::config.joystick_type << std::endl;
                 exit(EXIT_FAILURE);
@@ -106,8 +109,9 @@ template <typename LowCmd_t, typename LowState_t>
 class RobotBridge : public LeggedSDKBridgeBase
 {
 public:
-    RobotBridge(mjModel *model, mjData *data, int domain_id, std::string interface_name) 
-               : LeggedSDKBridgeBase(model, data)
+    RobotBridge(mjModel *model, mjData *data, int domain_id, std::string interface_name,
+                const KeyboardGlfwAdapter *keyboard = nullptr) 
+               : LeggedSDKBridgeBase(model, data, keyboard)
     {
         lowcmd = std::make_shared<LowCmd_t>(domain_id, interface_name, "rt/lowcmd",
                                             std::bind(&RobotBridge::lowcmdHandler, this, std::placeholders::_1),

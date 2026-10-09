@@ -16,6 +16,7 @@ The architecture is the same as [unitree_mujoco](https://github.com/unitreerobot
   make -j$(nproc)
   sudo make install
   ```
+- gcc-13
 
 ## Installation
 
@@ -44,6 +45,22 @@ The architecture is the same as [unitree_mujoco](https://github.com/unitreerobot
   Added joystick mapping code (simulate/src/physics_joystick.h) according to the proxy of [Yahboom USB Wireless Joystick](https://yahboom.com/study_module/PS2) and betop USB joystick
 
   Change the `joystick_type` in `simulate/config.yaml` to other values if you want to use joystick of other types
+
+- Keyboard teleop (no gamepad needed)
+
+  Set `use_joystick: 1` and `joystick_type: "keyboard"` in `simulate/config.yaml`. Held keys are read by
+  `simulate/src/keyboard_joystick.h` (a `GlfwAdapter` subclass), so it works while the viewer has focus.
+  Default mapping:
+
+  | input | keys |
+  | ----- | ---- |
+  | left stick (`lx`/`ly`) | `A`/`D` (left/right), `S`/`W` (back/forward) |
+  | right stick (`rx`/`ry`) | `J`/`L`, `K`/`I` |
+  | d-pad (`left`/`right`/`up`/`down`) | arrow keys |
+  | buttons | `Space`=A, `Left Shift`=B, `Q`=X, `E`=Y, `1`=L1, `2`=R1, `3`=start, `4`=select |
+
+  Edit `update()` in `simulate/src/keyboard_joystick.h` to remap. Note the arrow Left/Right keys are also
+  MuJoCo's step-forward/back shortcuts.
 
 - Press `Enter` to track base_link of the robot, press `Esc` to use free camera (only in C++)
 

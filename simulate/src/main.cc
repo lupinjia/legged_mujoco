@@ -29,6 +29,7 @@
 #include "glfw_adapter.h"
 #include "simulate.h"
 #include "array_safety.h"
+#include "keyboard_joystick.h"
 #include "legged_sdk_bridge.h"
 #include "param.h"
 
@@ -528,7 +529,8 @@ void *LeggedSDKBridgeThread(void *arg)
   
   std::unique_ptr<LeggedSDKBridgeBase> interface = nullptr;
   interface = std::make_unique<AgilepfBridge>(m, d,
-               param::config.domain_id, param::config.interface);
+               param::config.domain_id, param::config.interface,
+               static_cast<KeyboardGlfwAdapter *>(arg));
   
   while (true)
   {
@@ -587,13 +589,16 @@ int main(int argc, char **argv)
     param::config.robot_scene = proj_dir.parent_path() / "robots" / param::config.robot / param::config.robot_scene;
   }
 
-  // simulate object encapsulates the UI
+  // simulate object encapsulates the UI; the keyboard adapter records held keys
+  // so the bridge can expose a keyboard-driven joystick.
+  auto keyboard_adapter = std::make_unique<KeyboardGlfwAdapter>();
+  KeyboardGlfwAdapter *keyboard = keyboard_adapter.get();
   auto sim = std::make_unique<mj::Simulate>(
-    std::make_unique<mj::GlfwAdapter>(),
+    std::move(keyboard_adapter),
     &cam, &opt, &pert, /* is_passive = */ false);
 
   // publish and subscribe to low-level msg (motor, imu, etc) of unitree_sdk2
-  std::thread legged_sdk_thread(LeggedSDKBridgeThread, nullptr);
+  std::thread legged_sdk_thread(LeggedSDKBridgeThread, keyboard);
 
   // start physics thread
   std::thread physicsthreadhandle(&PhysicsThread, sim.get(), param::config.robot_scene.c_str());

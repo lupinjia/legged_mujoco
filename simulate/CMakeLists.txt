@@ -14,6 +14,23 @@ find_package(mujoco REQUIRED)
 find_package(legged_sdk REQUIRED)
 find_package(Boost REQUIRED COMPONENTS program_options)
 
+# MuJoCo's libmujoco.so statically links tinyxml2 and exports its symbols. Those
+# shadow the system libtinyxml2 that FastDDS (pulled in via legged_sdk) uses for
+# XML parsing, so creating a DDS participant crashes. Force the system tinyxml2
+# to be a direct dependency loaded before MuJoCo, keeping FastDDS on the ABI it
+# was built against.
+find_library(TINYXML2_LIBRARY NAMES tinyxml2)
+if(NOT TINYXML2_LIBRARY)
+  # Ubuntu ships no libtinyxml2.so dev symlink, only the versioned SONAME.
+  find_file(TINYXML2_LIBRARY NAMES libtinyxml2.so.10
+    PATHS /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}
+          /lib/${CMAKE_LIBRARY_ARCHITECTURE}
+          /usr/local/lib)
+endif()
+if(NOT TINYXML2_LIBRARY)
+  message(FATAL_ERROR "libtinyxml2 (FastDDS runtime dependency) not found")
+endif()
+
 include_directories(
   ${CMAKE_CURRENT_LIST_DIR}/src
   /opt/legged_sdk/include
@@ -25,6 +42,9 @@ file(GLOB SIM_SRC
 
 set(SIM_DEPENDENCIES
     pthread
+    -Wl,--no-as-needed
+    ${TINYXML2_LIBRARY}
+    -Wl,--as-needed
     mujoco::libmujoco_simulate
     glfw
     yaml-cpp
