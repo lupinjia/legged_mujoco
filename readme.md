@@ -74,4 +74,4 @@ from the URDF's mesh paths, and this repository does not include N1 robot assets
 
 ## Demo
 
-![](https://github.com/lupinjia/demo_imgs/blob/master/unitree_mujoco_demo.gif)
+![](./legged_mujoco_demo.gif)
